@@ -41,7 +41,9 @@ def index():
     data = []
     for marker in markers:
         data.append({'id': marker.id,
-                'food': marker.food})
+                'food': marker.food,
+                'lat': marker.lat,
+                'long': marker.long})
     return jsonify(data)
 
 
@@ -52,11 +54,15 @@ def data():
     try:
         id = request.form.get('id')
         food = request.form.get('food')
+        lat = request.form.get('lat')
+        long = request.form.get('long')
     except(KeyError):
         return jsonify({"error":"error"})
     try:
         marker.id = id
         marker.food = food
+        marker.lat = lat
+        marker.long = long
     except(KeyError):
         return jsonify({"err":"err"})
     db.session.add(marker)

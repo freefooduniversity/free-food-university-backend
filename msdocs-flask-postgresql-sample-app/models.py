@@ -1,5 +1,7 @@
+from ctypes.wintypes import FLOAT
+import numbers
 from app import db
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime
 from sqlalchemy.orm import declarative_base, validates
 
 # declarative base class
@@ -9,6 +11,8 @@ class Marker(db.Model):
     __tablename__ = 'marker'
     id = Column(Integer, primary_key=True)
     food = Column(String(50))
+    lat = Column(Float)
+    long = Column(Float)
     def __str__(self):
         return self.food
 '''
