@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/1ddb322b-47ef-4bdb-86a5-b50c8badd266/microsoft.web/sites/subscriptions/1ddb322b-47ef-4bdb-86a5-b50c8badd266/resourceGroups/free-food-university/providers/Microsoft.Web/sites/free-food-university",
+    "appService.deploySubpath": "msdocs-flask-postgresql-sample-app"
+}
