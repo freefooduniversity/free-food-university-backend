@@ -31,12 +31,12 @@ migrate = Migrate(app, db)
 
 # Create databases, if databases exists doesn't issue create
 # For schema changes, run "flask db migrate"
-from models import Marker
+from models import Marker, Stats
 db.create_all()
 db.session.commit()
 
 @app.route('/', methods=['GET'])
-def index():
+def getAllMarkers():
     markers = Marker.query.all()
     data = []
     for marker in markers:
@@ -46,10 +46,22 @@ def index():
                 'long': marker.long})
     return jsonify(data)
 
+@app.route('/stats', methods=['GET'])
+def getUSAStats():
+    stats = Stats.query.all()
+    data = []
+    for stat in stats:
+        data.append({'id': stat.id,
+                'food_events': stat.food_events,
+                'fed_today': stat.fed_today,
+                'fed_all_time': stat.fed_all_time,
+                'college': stat.college})
+    return jsonify(data)
+    
 
 @app.route('/add', methods=['POST'])
 @csrf.exempt
-def data(): 
+def addMarker(): 
     marker = Marker()
     try:
         id = request.form.get('id')

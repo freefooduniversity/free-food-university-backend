@@ -15,7 +15,18 @@ class Marker(db.Model):
     long = Column(Float)
     def __str__(self):
         return self.food
-'''
+
+class Stats(db.Model):
+    __tablename__ = 'stats'
+    id = Column(Integer, primary_key=True)
+    food_events = Column(Integer)
+    fed_today = Column(Integer)
+    fed_all_time = Column(Integer)
+    college = Column(String(50))
+    def __str__(self):
+        return self.food_events
+        '''
+
 class Restaurant(db.Model):
     __tablename__ = 'restaurant'
     id = Column(Integer, primary_key=True)
