@@ -36,6 +36,10 @@ db.create_all()
 db.session.commit()
 
 @app.route('/', methods=['GET'])
+def helloWorld():
+    return jsonify({"message": "Free Food University API. You're in the right place."})
+
+@app.route('/marker/all', methods=['GET'])
 def getAllMarkers():
     markers = Marker.query.all()
     data = []
@@ -46,20 +50,21 @@ def getAllMarkers():
                 'long': marker.long})
     return jsonify(data)
 
-@app.route('/stats', methods=['GET'])
-def getUSAStats():
+@app.route('/stats/<string:college>', methods=['GET'])
+def getUSAStats(college):
     stats = Stats.query.all()
-    data = []
+    data = {}
     for stat in stats:
-        data.append({'id': stat.id,
-                'food_events': stat.food_events,
-                'fed_today': stat.fed_today,
-                'fed_all_time': stat.fed_all_time,
-                'college': stat.college})
+        if (stat.college == college):
+            data = {'id': stat.id,
+                    'food_events': stat.food_events,
+                    'fed_today': stat.fed_today,
+                    'fed_all_time': stat.fed_all_time,
+                    'college': stat.college}
     return jsonify(data)
     
 
-@app.route('/add', methods=['POST'])
+@app.route('/marker/add', methods=['POST'])
 @csrf.exempt
 def addMarker(): 
     marker = Marker()
@@ -78,6 +83,36 @@ def addMarker():
     except(KeyError):
         return jsonify({"err":"err"})
     db.session.add(marker)
+    db.session.commit()
+
+@app.route('/stats/update/<string:college>', methods=['PATCH'])
+@csrf.exempt
+def updateStats(college): 
+    food_events = stat.food_events
+    fed_today = stat.fed_today
+    fed_all_time = stat.fed_all_time
+    method = request.form.get('method')
+    statChanging = request.form.get('statChanging')
+    stats = Stats.query.all()
+    for stat in stats:
+        if (stat.college == college):
+            if (statChanging == 'food_events'):
+                if (method == 'add'):
+                    food_events += 1
+                else: 
+                    food_events -= 1
+            else:
+                if (method == 'add'):
+                    fed_today += 1
+                    fed_all_time += 1
+                else:
+                    fed_today = 0
+
+    stat.food_events = food_events
+    stat.fed_today = fed_today
+    stat.fed_all_time = fed_all_time
+
+    db.session.add(stat)
     db.session.commit()
 
 '''
