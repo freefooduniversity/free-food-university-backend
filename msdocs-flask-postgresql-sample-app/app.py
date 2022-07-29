@@ -68,11 +68,12 @@ def getUSAStats(college):
 @csrf.exempt
 def addMarker(): 
     marker = Marker()
+    input = request.get_json()
     try:
-        id = request.form.get('id')
-        food = request.form.get('food')
-        lat = request.form.get('lat')
-        long = request.form.get('long')
+        id = input['id']
+        food = input['food']
+        lat = input['lat']
+        long = input['long']
     except(KeyError):
         return jsonify({"error":"error"})
     try:
