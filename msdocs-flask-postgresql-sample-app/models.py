@@ -1,6 +1,9 @@
 from ctypes.wintypes import FLOAT
 import numbers
-from app import db
+try:
+    from app import db
+except ImportError:
+    from __main__ import db
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime
 from sqlalchemy.orm import declarative_base, validates
 
@@ -10,9 +13,21 @@ Base = declarative_base()
 class Marker(db.Model):
     __tablename__ = 'marker'
     id = Column(Integer, primary_key=True)
-    food = Column(String(50))
+    food = Column(String(20))
     lat = Column(Float)
     long = Column(Float)
+    college = Column(String(20))
+    start_time = Column(String(10))
+    end_time = Column(String(10))
+    capacity = Column(Integer)
+    dibs = Column(Integer)
+    likes = Column(Integer)
+    dislikes = Column(Integer)
+    building = Column(String(50))
+    event = Column(String(100))
+    additional_info = Column(String(300))
+    creator_email = Column(String(50))
+    pic_url = Column(String(500)) # url from firebase image service 
     def __str__(self):
         return self.food
 

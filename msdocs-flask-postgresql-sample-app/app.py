@@ -74,6 +74,18 @@ def addMarker():
         food = input['food']
         lat = input['lat']
         long = input['long']
+        college = input['college']
+        start_time = input['start_time']
+        end_time = input['end_time']
+        capacity = input['capacity']
+        dibs = input['dibs']
+        likes = input['likes']
+        dislikes = input['dislikes']
+        building = input['building']
+        event = input['event']
+        additional_info = input['additional_info']
+        creator_email = input['creator_email']
+        pic_url = input['pic_url']
     except(KeyError):
         return jsonify({"error":"error"})
     try:
@@ -81,6 +93,18 @@ def addMarker():
         marker.food = food
         marker.lat = lat
         marker.long = long
+        marker.college = college
+        marker.start_time = start_time
+        marker.end_time = end_time
+        marker.capacity = capacity
+        marker.dibs = dibs
+        marker.likes = likes
+        marker.dislikes = dislikes
+        marker.creator_email = creator_email
+        marker.building = building
+        marker.event = event
+        marker.additional_info = additional_info
+        marker.pic_url = pic_url
     except(KeyError):
         return jsonify({"err":"err"})
     db.session.add(marker)
