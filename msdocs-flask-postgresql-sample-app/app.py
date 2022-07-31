@@ -47,7 +47,16 @@ def getAllMarkers():
         data.append({'id': marker.id,
                 'food': marker.food,
                 'lat': marker.lat,
-                'long': marker.long})
+                'long': marker.long,
+                'college': marker.college,
+                'capacity': marker.capacity,
+                'dibs': marker.dibs,
+                'likes': marker.likes,
+                'dislikes': marker.dislikes,
+                'creator_email': marker.creator_email,
+                'pic_url': marker.pic_url,
+                'start_time': marker.start_time,
+                'end_time': marker.end_time})
     return jsonify(data)
 
 @app.route('/stats/<string:college>', methods=['GET'])
