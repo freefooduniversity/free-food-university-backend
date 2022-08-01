@@ -121,9 +121,37 @@ def addMarker():
 
 # fed_today_changed == -1 for resetting fed_today and 1, 0 for no change, 1 for adding to it.
 #fed_all_time is auto updated
-@app.route('/stats/update/<string:college>', methods=['PATCH'])
+@app.route('/stats/fed_today/update/<string:college>', methods=['PATCH'])
 @csrf.exempt
-def updateStats(college): 
+def updateFedToday(college): 
+    stats = Stats()
+    STATS = Stats.query.all()
+    input = request.get_json()
+
+    for stat in STATS:
+        if stat.college == college:
+            id = stat.id
+            college = stat.college
+            food_events = stat.food_events
+            fed_today = stat.fed_today
+            fed_all_time = stat.fed_all_time
+            db.session.delete(stat)
+            stat.id = id
+            stat.college = college
+            stat.food_events = food_events
+            if input['fed_today_change'] == -1:
+                stat.fed_today = 0
+            else:
+                stat.fed_today += input['fed_today_change']
+
+            stat.fed_all_time += max(0, input['fed_today_change'])
+            db.session.add(stat)
+    db.session.commit()
+
+
+@app.route('/stats/food_events/update/<string:college>', methods=['PATCH'])
+@csrf.exempt
+def updateFoodEvents(college): 
     stats = Stats()
     STATS = Stats.query.all()
     input = request.get_json()
@@ -139,14 +167,9 @@ def updateStats(college):
             stat.id = id
             stat.college = college
             stat.food_events = input['food_events']
-            if input['fed_today_change'] == -1:
-                stat.fed_today = 0
-            else:
-                stat.fed_today += input['fed_today_change']
-
-            stat.fed_all_time += max(0, input['fed_today_change'])
+            stat.fed_today = fed_today
+            stat.fed_all_time = fed_all_time
             db.session.add(stat)
-
     db.session.commit()
 
 '''
