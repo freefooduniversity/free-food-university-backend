@@ -143,7 +143,6 @@ def updateFedToday(college):
                 stat.fed_today = 0
             else:
                 stat.fed_today += input['fed_today_change']
-
             stat.fed_all_time += max(0, input['fed_today_change'])
             db.session.add(stat)
     db.session.commit()
@@ -155,7 +154,7 @@ def updateFoodEvents(college):
     stats = Stats()
     STATS = Stats.query.all()
     input = request.get_json()
-
+    all_food_events = 0
     for stat in STATS:
         if stat.college == college:
             id = stat.id
@@ -167,6 +166,22 @@ def updateFoodEvents(college):
             stat.id = id
             stat.college = college
             stat.food_events = input['food_events']
+            stat.fed_today = fed_today
+            stat.fed_all_time = fed_all_time
+            db.session.add(stat)
+        if not stat.college == 'all' and not stat.college == 'pickCollege' and not stat.college == 'select-state':
+            all_food_events += stat.food_events
+    for stat in STATS:
+        if stat.college == 'all':
+            id = stat.id
+            college = stat.college
+            food_events = stat.food_events
+            fed_today = stat.fed_today
+            fed_all_time = stat.fed_all_time
+            db.session.delete(stat)
+            stat.id = id
+            stat.college = college
+            stat.food_events = all_food_events
             stat.fed_today = fed_today
             stat.fed_all_time = fed_all_time
             db.session.add(stat)
