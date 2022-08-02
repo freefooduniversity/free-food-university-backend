@@ -181,7 +181,7 @@ def updateFoodEvents(college):
             db.session.delete(stat)
             stat.id = id
             stat.college = college
-            stat.food_events = input['food_events']
+            stat.food_events += input['food_events_change']
             stat.fed_today = fed_today
             stat.fed_all_time = fed_all_time
             db.session.add(stat)
