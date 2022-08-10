@@ -203,6 +203,29 @@ def updateFoodEvents(college):
             db.session.add(stat)
     db.session.commit()
 
+@app.route('/marker/<string:college>', methods=["GET"])
+@csrf.exempt
+def getCollegeMarkers(college):
+    markers = Marker.query.all()
+    colleges = []
+    for marker in markers:
+        if (marker.college == college):
+            colleges.append({'id': marker.id,
+                    'food': marker.food,
+                    'lat': marker.lat,
+                    'long': marker.long,
+                    'college': marker.college,
+                    'capacity': marker.capacity,
+                    'dibs': marker.dibs,
+                    'likes': marker.likes,
+                    'dislikes': marker.dislikes,
+                    'creator_email': marker.creator_email,
+                    'pic_url': marker.pic_url,
+                    'start_time': marker.start_time,
+                    'end_time': marker.end_time})
+
+    return jsonify(colleges)
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
