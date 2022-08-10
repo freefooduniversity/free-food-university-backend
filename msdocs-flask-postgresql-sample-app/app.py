@@ -209,7 +209,7 @@ def getCollegeMarkers(college):
     markers = Marker.query.all()
     colleges = []
     for marker in markers:
-        if (marker.college == college):
+        if (marker.college.lower() == college.lower()):
             colleges.append({'id': marker.id,
                     'food': marker.food,
                     'lat': marker.lat,
