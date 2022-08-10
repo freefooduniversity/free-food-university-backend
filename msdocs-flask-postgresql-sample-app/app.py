@@ -185,10 +185,10 @@ def updateFoodEvents(college):
             stat.fed_today = fed_today
             stat.fed_all_time = fed_all_time
             db.session.add(stat)
-        if not stat.college == 'all' and not stat.college == 'pickCollege' and not stat.college == 'select-state':
+        if not stat.college == 'all' and not stat.college == 'pickCollege':
             all_food_events += stat.food_events
     for stat in STATS:
-        if stat.college == 'all':
+        if stat.college == 'all' or stat.college == 'pickCollege':
             id = stat.id
             college = stat.college
             food_events = stat.food_events
