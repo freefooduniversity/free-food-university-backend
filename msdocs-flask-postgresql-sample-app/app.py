@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
+from random import randint
 import os
 
 app = Flask(__name__, static_folder='static')
@@ -250,6 +251,27 @@ def getMarkersFromState():
                     'end_time': marker.end_time})
     return jsonify(data)
 
+@app.route('/stats/state', methods=['POST'])
+@csrf.exempt
+def getStatsForState():
+    stats = Stats.query.all()
+    input = request.get_json()
+    id = randint(0, 9999999)
+    food_events = 0
+    fed_today = 0
+    fed_all_time = 0
+    for stat in stats:
+        if stat.college in input['colleges']:
+            food_events += stat.food_events
+            fed_today += stat.fed_today
+            fed_all_time += stat.fed_all_time
+            
+    data = {'id': id,
+            'food_events': food_events,
+            'fed_today': fed_today,
+            'fed_all_time': fed_all_time,
+            'college': "state"}
+    return jsonify(data)
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
