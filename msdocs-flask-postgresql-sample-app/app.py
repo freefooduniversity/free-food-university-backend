@@ -226,6 +226,30 @@ def getCollegeMarkers(college):
 
     return jsonify(colleges)
 
+# Returns list of colleges for all colleges provided for a given state
+@app.route('/marker/state', methods=['POST'])
+@csrf.exempt
+def getMarkersFromState(): 
+    input = request.get_json()
+    markers = Marker.query.all()
+    data = []
+    for marker in markers:
+        if marker.college in input['colleges']:
+            data.append({'id': marker.id,
+                    'food': marker.food,
+                    'lat': marker.lat,
+                    'long': marker.long,
+                    'college': marker.college,
+                    'capacity': marker.capacity,
+                    'dibs': marker.dibs,
+                    'likes': marker.likes,
+                    'dislikes': marker.dislikes,
+                    'creator_email': marker.creator_email,
+                    'pic_url': marker.pic_url,
+                    'start_time': marker.start_time,
+                    'end_time': marker.end_time})
+    return jsonify(data)
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
