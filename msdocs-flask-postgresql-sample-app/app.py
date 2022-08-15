@@ -309,7 +309,7 @@ def getMarkersFromFoodAndCollege(college, food):
                         'start_time': marker.start_time,
                         'end_time': marker.end_time})
     if (len(markerArray) > 0):
-        return jsonify(markerArray[0])
+        return jsonify(markerArray)
     else: 
         return {}
 
