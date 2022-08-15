@@ -290,6 +290,29 @@ def getStatsForState():
             'college': "state"}
     return jsonify(data)
 
+@app.route('/marker/<string:college>/<string:food>', methods = ['GET'])
+def getMarkersFromFoodAndCollege(college, food):
+    markers = Marker.query.filter_by(college=college, food=food).all()
+    markerArray = []
+    for marker in markers:
+        markerArray.append({'id': marker.id,
+                        'food': marker.food,
+                        'lat': marker.lat,
+                        'long': marker.long,
+                        'college': marker.college,
+                        'capacity': marker.capacity,
+                        'dibs': marker.dibs,
+                        'likes': marker.likes,
+                        'dislikes': marker.dislikes,
+                        'creator_email': marker.creator_email,
+                        'pic_url': marker.pic_url,
+                        'start_time': marker.start_time,
+                        'end_time': marker.end_time})
+    if (len(markerArray) > 0):
+        return jsonify(markerArray[0])
+    else: 
+        return {}
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
