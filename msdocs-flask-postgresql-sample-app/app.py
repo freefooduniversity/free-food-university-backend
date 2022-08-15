@@ -38,7 +38,7 @@ db.session.commit()
 
 @app.route('/', methods=['GET'])
 def helloWorld():
-    currentTime = datetime.now()
+    currentTime = convertStringToInt(datetime.now().strftime("%H : %M : %S"))
     return jsonify(currentTime)
 
 @app.route('/marker/all', methods=['GET'])
@@ -237,7 +237,7 @@ def convertStringToInt(currentTime):
     newIntTime = int(newString[0]) * 100
     newIntTime += int(newString[1])
     
-    return newIntTime + 300
+    return newIntTime
 
 
 def deletePastMarkers(markerId):
