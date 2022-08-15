@@ -60,6 +60,8 @@ def getAllMarkers():
                 'end_time': marker.end_time})
     return jsonify(data)
 
+
+
 @app.route('/stats/<string:college>', methods=['GET'])
 def getUSAStats(college):
     stats = Stats.query.all()
@@ -207,23 +209,22 @@ def updateFoodEvents(college):
 @app.route('/marker/<string:college>', methods=["GET"])
 @csrf.exempt
 def getCollegeMarkers(college):
-    markers = Marker.query.all()
+    markers = Marker.query.filter_by(college=college).all()
     colleges = []
     for marker in markers:
-        if (marker.college.lower() == college.lower()):
-            colleges.append({'id': marker.id,
-                    'food': marker.food,
-                    'lat': marker.lat,
-                    'long': marker.long,
-                    'college': marker.college,
-                    'capacity': marker.capacity,
-                    'dibs': marker.dibs,
-                    'likes': marker.likes,
-                    'dislikes': marker.dislikes,
-                    'creator_email': marker.creator_email,
-                    'pic_url': marker.pic_url,
-                    'start_time': marker.start_time,
-                    'end_time': marker.end_time})
+         colleges.append({'id': marker.id,
+                'food': marker.food,
+                'lat': marker.lat,
+                'long': marker.long,
+                'college': marker.college,
+                'capacity': marker.capacity,
+                'dibs': marker.dibs,
+                'likes': marker.likes,
+                'dislikes': marker.dislikes,
+                'creator_email': marker.creator_email,
+                'pic_url': marker.pic_url,
+                'start_time': marker.start_time,
+                'end_time': marker.end_time})
 
     return jsonify(colleges)
 
@@ -272,6 +273,7 @@ def getStatsForState():
             'fed_all_time': fed_all_time,
             'college': "state"}
     return jsonify(data)
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
