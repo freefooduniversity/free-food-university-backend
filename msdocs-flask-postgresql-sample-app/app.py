@@ -38,7 +38,8 @@ db.session.commit()
 
 @app.route('/', methods=['GET'])
 def helloWorld():
-    return jsonify({"message": "Free Food University API. You're in the right place."})
+    currentTime = datetime.now()
+    return jsonify(currentTime)
 
 @app.route('/marker/all', methods=['GET'])
 def getAllMarkers():
@@ -235,8 +236,8 @@ def convertStringToInt(currentTime):
     newString = currentTime.split(":")
     newIntTime = int(newString[0]) * 100
     newIntTime += int(newString[1])
-    print(newIntTime)
-    return newIntTime
+    
+    return newIntTime + 300
 
 
 def deletePastMarkers(markerId):
