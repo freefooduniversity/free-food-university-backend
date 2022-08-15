@@ -235,10 +235,12 @@ def convertStringToInt(currentTime):
     newString = currentTime.split(":")
     newIntTime = int(newString[0]) * 100
     newIntTime += int(newString[1])
+    print(newIntTime)
     return newIntTime
 
 
 def deletePastMarkers(markerId):
+    print("delete")
     deletedMarker = Marker.query.filter_by(id=markerId).first()
     db.session.delete(deletedMarker)
     db.session.commit()
