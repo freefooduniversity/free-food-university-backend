@@ -45,19 +45,22 @@ def getAllMarkers():
     markers = Marker.query.all()
     data = []
     for marker in markers:
-        data.append({'id': marker.id,
-                'food': marker.food,
-                'lat': marker.lat,
-                'long': marker.long,
-                'college': marker.college,
-                'capacity': marker.capacity,
-                'dibs': marker.dibs,
-                'likes': marker.likes,
-                'dislikes': marker.dislikes,
-                'creator_email': marker.creator_email,
-                'pic_url': marker.pic_url,
-                'start_time': marker.start_time,
-                'end_time': marker.end_time})
+        if (marker.end_time < convertStringToInt(datetime.now().strftime("%H:%M:%S"))):
+            deletePastMarkers(marker.id)
+        else:
+            data.append({'id': marker.id,
+                    'food': marker.food,
+                    'lat': marker.lat,
+                    'long': marker.long,
+                    'college': marker.college,
+                    'capacity': marker.capacity,
+                    'dibs': marker.dibs,
+                    'likes': marker.likes,
+                    'dislikes': marker.dislikes,
+                    'creator_email': marker.creator_email,
+                    'pic_url': marker.pic_url,
+                    'start_time': marker.start_time,
+                    'end_time': marker.end_time})
     return jsonify(data)
 
 
@@ -212,21 +215,34 @@ def getCollegeMarkers(college):
     markers = Marker.query.filter_by(college=college).all()
     colleges = []
     for marker in markers:
-         colleges.append({'id': marker.id,
-                'food': marker.food,
-                'lat': marker.lat,
-                'long': marker.long,
-                'college': marker.college,
-                'capacity': marker.capacity,
-                'dibs': marker.dibs,
-                'likes': marker.likes,
-                'dislikes': marker.dislikes,
-                'creator_email': marker.creator_email,
-                'pic_url': marker.pic_url,
-                'start_time': marker.start_time,
-                'end_time': marker.end_time})
+            colleges.append({'id': marker.id,
+                    'food': marker.food,
+                    'lat': marker.lat,
+                    'long': marker.long,
+                    'college': marker.college,
+                    'capacity': marker.capacity,
+                    'dibs': marker.dibs,
+                    'likes': marker.likes,
+                    'dislikes': marker.dislikes,
+                    'creator_email': marker.creator_email,
+                    'pic_url': marker.pic_url,
+                    'start_time': marker.start_time,
+                    'end_time': marker.end_time})
 
     return jsonify(colleges)
+
+def convertStringToInt(currentTime):
+    newString = currentTime.split(":")
+    newIntTime = int(newString[0]) * 100
+    newIntTime += int(newString[1])
+    return newIntTime
+
+
+def deletePastMarkers(markerId):
+    deletedMarker = Marker.query.filter_by(id=markerId).first()
+    db.session.delete(deletedMarker)
+    db.session.commit()
+
 
 # Returns list of colleges for all colleges provided for a given state
 @app.route('/marker/state', methods=['POST'])
