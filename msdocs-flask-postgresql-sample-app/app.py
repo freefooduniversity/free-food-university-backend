@@ -61,7 +61,11 @@ def getAllMarkers():
                     'creator_email': marker.creator_email,
                     'pic_url': marker.pic_url,
                     'start_time': marker.start_time,
-                    'end_time': marker.end_time})
+                    'end_time': marker.end_time,
+                    'time_zone': marker.time_zone,
+                    'event':  marker.event,
+                    'additional_info': marker.additional_info,
+                    'building': marker.building})
     return jsonify(data)
 
 
@@ -93,6 +97,7 @@ def addMarker():
         college = input['college']
         start_time = input['start_time']
         end_time = input['end_time']
+        time_zone = input['time_zone']
         capacity = input['capacity']
         dibs = input['dibs']
         likes = input['likes']
@@ -112,6 +117,7 @@ def addMarker():
         marker.college = college
         marker.start_time = start_time
         marker.end_time = end_time
+        marker.time_zone = time_zone
         marker.capacity = capacity
         marker.dibs = dibs
         marker.likes = likes
@@ -228,7 +234,11 @@ def getCollegeMarkers(college):
                     'creator_email': marker.creator_email,
                     'pic_url': marker.pic_url,
                     'start_time': marker.start_time,
-                    'end_time': marker.end_time})
+                    'end_time': marker.end_time,
+                    'time_zone': marker.time_zone,
+                    'event': marker.event,
+                    'building': marker.building,
+                    'additional_info': marker.additional_info})
 
     return jsonify(colleges)
 
@@ -268,7 +278,11 @@ def getMarkersFromState():
                     'creator_email': marker.creator_email,
                     'pic_url': marker.pic_url,
                     'start_time': marker.start_time,
-                    'end_time': marker.end_time})
+                    'end_time': marker.end_time,
+                    'time_zone': marker.time_zone,
+                    'event': marker.event,
+                    'building': marker.building,
+                    'additional_info': marker.additional_info})
     return jsonify(data)
 
 @app.route('/stats/state', methods=['POST'])
@@ -310,7 +324,11 @@ def getMarkersFromFoodAndCollege(college, food):
                         'creator_email': marker.creator_email,
                         'pic_url': marker.pic_url,
                         'start_time': marker.start_time,
-                        'end_time': marker.end_time})
+                        'end_time': marker.end_time,
+                        'time_zone': marker.time_zone,
+                        'event': marker.event,
+                        'building': marker.building,
+                        'additional_info': marker.additional_info})
     if (len(markerArray) > 0):
         return jsonify(markerArray)
     else: 

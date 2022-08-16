@@ -19,6 +19,7 @@ class Marker(db.Model):
     college = Column(String(20))
     start_time = Column(String(10))
     end_time = Column(String(10))
+    time_zone = Column(Integer)
     capacity = Column(Integer)
     dibs = Column(Integer)
     likes = Column(Integer)
