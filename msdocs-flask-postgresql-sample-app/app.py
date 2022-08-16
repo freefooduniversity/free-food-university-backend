@@ -74,9 +74,25 @@ def getAllMarkers():
 def getUSAStats(college):
     stats = Stats.query.all()
     data = {}
+    seenCollege = False
     for stat in stats:
         if (stat.college == college):
+            seenCollege = True
             data = {'id': stat.id,
+                    'food_events': stat.food_events,
+                    'fed_today': stat.fed_today,
+                    'fed_all_time': stat.fed_all_time,
+                    'college': stat.college}
+    if not seenCollege:
+        stat = Stats()
+        stat.id = randint(0, 9999999)
+        stat.food_events = 0
+        stat.fed_today = 0
+        stat.fed_all_time = 0
+        stat.college = college
+        db.session.add(stat)
+        db.session.commit()
+        data = {'id': stat.id,
                     'food_events': stat.food_events,
                     'fed_today': stat.fed_today,
                     'fed_all_time': stat.fed_all_time,
