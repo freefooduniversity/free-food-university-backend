@@ -46,7 +46,7 @@ def getAllMarkers():
     markers = Marker.query.all()
     data = []
     for marker in markers:
-        if (marker.end_time < convertStringToInt(datetime.now().strftime("%H:%M:%S"))):
+        if (marker.end_time + marker.time_zone < convertStringToInt(datetime.now().strftime("%H:%M:%S"))):
             deletePastMarkers(marker.id)
         else:
             data.append({'id': marker.id,
@@ -349,6 +349,7 @@ def getMarkersFromFoodAndCollege(college, food):
         return jsonify(markerArray)
     else: 
         return {}
+
 
 '''
 @app.route('/<int:id>', methods=['GET'])
