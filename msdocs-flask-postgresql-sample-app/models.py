@@ -24,6 +24,7 @@ class Marker(db.Model):
     dibs = Column(Integer)
     likes = Column(Integer)
     dislikes = Column(Integer)
+    reports = Column(Integer)
     building = Column(String(50))
     event = Column(String(100))
     additional_info = Column(String(300))

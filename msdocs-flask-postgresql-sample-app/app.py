@@ -36,6 +36,7 @@ from models import Marker, Stats
 db.create_all()
 db.session.commit()
 
+
 @app.route('/', methods=['GET'])
 def helloWorld():
     currentTime = convertStringToInt(datetime.now().strftime("%H : %M : %S"))
@@ -118,6 +119,7 @@ def addMarker():
         dibs = input['dibs']
         likes = input['likes']
         dislikes = input['dislikes']
+        reports = input['reports']
         building = input['building']
         event = input['event']
         additional_info = input['additional_info']
@@ -138,6 +140,7 @@ def addMarker():
         marker.dibs = dibs
         marker.likes = likes
         marker.dislikes = dislikes
+        marker.reports = reports
         marker.creator_email = creator_email
         marker.building = building
         marker.event = event
@@ -254,6 +257,7 @@ def getCollegeMarkers(college):
                     'pic_url': marker.pic_url,
                     'start_time': marker.start_time,
                     'end_time': marker.end_time,
+                    'reports': marker.reports,
                     'time_zone': marker.time_zone,
                     'event': marker.event,
                     'building': marker.building,
@@ -298,6 +302,7 @@ def getMarkersFromState():
                     'pic_url': marker.pic_url,
                     'start_time': marker.start_time,
                     'end_time': marker.end_time,
+                    'reports': marker.reports,
                     'time_zone': marker.time_zone,
                     'event': marker.event,
                     'building': marker.building,
@@ -340,6 +345,7 @@ def getMarkersFromFoodAndCollege(college, food):
                         'dibs': marker.dibs,
                         'likes': marker.likes,
                         'dislikes': marker.dislikes,
+                        'reports': marker.reports,
                         'creator_email': marker.creator_email,
                         'pic_url': marker.pic_url,
                         'start_time': marker.start_time,
@@ -395,9 +401,44 @@ def patchMarker(id, button, college):
     db.session.add(marker)
     db.session.commit()
     return jsonify(["success"])
-    
-        
-        
+
+@app.route('/stats/fed_today/reset')
+def resetFedToday():
+    allStats = Stats.query.filter_by(college="all").all()
+    if (allStats[0].fed_today == 0):
+        return
+    stats = Stats.query.all()
+    for stat in stats:
+        if not stat.fed_today == 0:
+            db.session.delete(stat)
+            stat.fed_today = 0
+            db.session.add(stat)
+    db.session.commit()
+
+@app.route('/marker/title/college/<string:food>/<string:building>/<string:college>')
+def getMarkerByTitleAndCollege(food, building, college):
+    markers = Marker.query.filter_by(food=food, building=building, college=college).all()
+    Markers = []
+    for marker in markers:
+        Markers.append({'id': marker.id,
+                        'food': marker.food,
+                        'lat': marker.lat,
+                        'long': marker.long,
+                        'college': marker.college,
+                        'capacity': marker.capacity,
+                        'dibs': marker.dibs,
+                        'likes': marker.likes,
+                        'dislikes': marker.dislikes,
+                        'reports': marker.reports,
+                        'creator_email': marker.creator_email,
+                        'pic_url': marker.pic_url,
+                        'start_time': marker.start_time,
+                        'end_time': marker.end_time,
+                        'time_zone': marker.time_zone,
+                        'event': marker.event,
+                        'building': marker.building,
+                        'additional_info': marker.additional_info})
+    return jsonify(Markers)
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
