@@ -350,7 +350,26 @@ def getMarkersFromFoodAndCollege(college, food):
     else: 
         return {}
 
-
+# likes, dislikes, reports, sign ups, here
+@app.route('/marker/button/<string:id>/<string:button>', methods = ['GET'])
+def patchMarker(id, button):
+    markersTemp = Marker.query.filter_by(id=id).all()
+    marker = markersTemp[0]
+    db.session.delete(markersTemp[0])
+    if (button == 'likes'):
+        marker.likes += 1
+    if (button == 'dislikes'):
+        marker.dislikes += 1
+    if (button == 'dibs'):
+        marker.dibs += 1
+    if (button == 'reports'):
+        marker.reports += 1
+    db.session.add(marker)
+    db.session.commit()
+    return {}
+    
+        
+        
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
