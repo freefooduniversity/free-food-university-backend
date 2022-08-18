@@ -354,19 +354,44 @@ def getMarkersFromFoodAndCollege(college, food):
         return {}
 
 # likes, dislikes, reports, sign ups, here
-@app.route('/marker/button/<string:id>/<string:button>', methods = ['GET'])
-def patchMarker(id, button):
+@app.route('/marker/button/<string:id>/<string:button>/<string:college>', methods = ['GET'])
+def patchMarker(id, button, college):
+    All = Stats.query.filter_by(college="all").all()
+    PickCollege = Stats.query.filter_by(college="pickCollege").all()
+    College = Stats.query.filter_by(college=college).all()
+    statAll = All[0]
+    statPickCollege = PickCollege[0]
+    statCollege = College[0]
     markersTemp = Marker.query.filter_by(id=id).all()
     marker = markersTemp[0]
     db.session.delete(markersTemp[0])
+    db.session.delete(statPickCollege)
+    db.session.delete(statAll)
+    db.session.delete(statCollege)
     if (button == 'likes'):
         marker.likes += 1
+        statAll.fed_today += 1
+        statCollege.fed_today += 1
+        statAll.fed_all_time += 1
+        statCollege.fed_all_time += 1
+        statPickCollege.fed_today += 1
+        statPickCollege.fed_all_time += 1
     if (button == 'dislikes'):
         marker.dislikes += 1
     if (button == 'dibs'):
         marker.dibs += 1
+        statAll.fed_today += 1
+        statCollege.fed_today += 1
+        statAll.fed_all_time += 1
+        statCollege.fed_all_time += 1
+        statPickCollege.fed_today += 1
+        statPickCollege.fed_all_time += 1
     if (button == 'reports'):
         marker.reports += 1
+    
+    db.session.add(statPickCollege)
+    db.session.add(statAll)
+    db.session.add(statCollege)
     db.session.add(marker)
     db.session.commit()
     return jsonify(["success"])
