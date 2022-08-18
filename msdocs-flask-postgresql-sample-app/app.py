@@ -46,7 +46,7 @@ def getAllMarkers():
     markers = Marker.query.all()
     data = []
     for marker in markers:
-        if (marker.end_time + marker.time_zone < convertStringToInt(datetime.now().strftime("%H:%M:%S"))):
+        if (marker.end_time + marker.time_zone < convertStringToInt(datetime.now().strftime("%H:%M:%S")) or convertStringToInt(datetime.now().strftime("%H:%M:%S")) + 1200 < marker.end_time):
             deletePastMarkers(marker.id)
         else:
             data.append({'id': marker.id,
