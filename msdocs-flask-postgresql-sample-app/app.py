@@ -40,8 +40,8 @@ db.session.commit()
 def helloWorld():
     currentTime = convertStringToInt(datetime.now().strftime("%H : %M : %S"))
     return jsonify(currentTime)
-
-@app.route('/marker/all', methods=['GET'])
+'''
+@app.route('/markers/all', methods=['GET'])
 def getAllMarkers():
     markers = Marker.query.all()
     data = []
@@ -67,7 +67,7 @@ def getAllMarkers():
                     'additional_info': marker.additional_info,
                     'building': marker.building})
     return jsonify(data)
-
+'''
 
 
 @app.route('/stats/<string:college>', methods=['GET'])
@@ -235,9 +235,15 @@ def updateFoodEvents(college):
 @app.route('/marker/<string:college>', methods=["GET"])
 @csrf.exempt
 def getCollegeMarkers(college):
-    markers = Marker.query.filter_by(college=college).all()
     colleges = []
+    if (college == "all" or college == "pickCollege"):
+        markers = Marker.query.all()
+    else:
+        markers = Marker.query.filter_by(college=college).all()
     for marker in markers:
+         if (marker.end_time + marker.time_zone < convertStringToInt(datetime.now().strftime("%H:%M:%S")) or convertStringToInt(datetime.now().strftime("%H:%M:%S")) + 1200 < marker.end_time):
+            deletePastMarkers(marker.id)
+         else:
             colleges.append({'id': marker.id,
                     'food': marker.food,
                     'lat': marker.lat,
@@ -366,7 +372,7 @@ def patchMarker(id, button):
         marker.reports += 1
     db.session.add(marker)
     db.session.commit()
-    return {}
+    return jsonify(["success"])
     
         
         
