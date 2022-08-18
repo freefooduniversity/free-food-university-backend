@@ -199,7 +199,6 @@ def updateFoodEvents(college):
     stats = Stats()
     STATS = Stats.query.all()
     input = request.get_json()
-    all_food_events = 0
     for stat in STATS:
         if stat.college == college:
             id = stat.id
@@ -214,8 +213,6 @@ def updateFoodEvents(college):
             stat.fed_today = fed_today
             stat.fed_all_time = fed_all_time
             db.session.add(stat)
-        if not stat.college == 'all' and not stat.college == 'pickCollege':
-            all_food_events += stat.food_events
     for stat in STATS:
         if stat.college == 'all' or stat.college == 'pickCollege':
             id = stat.id
@@ -226,7 +223,7 @@ def updateFoodEvents(college):
             db.session.delete(stat)
             stat.id = id
             stat.college = college
-            stat.food_events = all_food_events
+            stat.food_events = input['food_events']
             stat.fed_today = fed_today
             stat.fed_all_time = fed_all_time
             db.session.add(stat)
