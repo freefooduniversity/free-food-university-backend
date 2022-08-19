@@ -37,7 +37,7 @@ db.create_all()
 db.session.commit()
 
 
-@app.route('/', methods=['GET'])
+@app.route('/' + os.environ['free'] + '/', methods=['GET'])
 def helloWorld():
     currentTime = convertStringToInt(datetime.now().strftime("%H : %M : %S"))
     return jsonify(currentTime)
@@ -71,7 +71,7 @@ def getAllMarkers():
 '''
 
 
-@app.route('/stats/<string:college>', methods=['GET'])
+@app.route('/' + os.environ['free'] + '/stats/<string:college>', methods=['GET'])
 def getUSAStats(college):
     stats = Stats.query.all()
     data = {}
@@ -101,7 +101,7 @@ def getUSAStats(college):
     return jsonify(data)
     
 
-@app.route('/marker/add', methods=['POST'])
+@app.route('/' + os.environ['free'] + '/marker/add', methods=['POST'])
 @csrf.exempt
 def addMarker(): 
     marker = Marker()
@@ -153,7 +153,7 @@ def addMarker():
 
 # fed_today_changed == -1 for resetting fed_today and 1, 0 for no change, 1 for adding to it.
 #fed_all_time is auto updated
-@app.route('/stats/fed_today/update/<string:college>', methods=['PATCH'])
+@app.route('/' + os.environ['free'] + '/stats/fed_today/update/<string:college>', methods=['PATCH'])
 @csrf.exempt
 def updateFedToday(college): 
     stats = Stats()
@@ -196,7 +196,7 @@ def updateFedToday(college):
     db.session.commit()
 
 
-@app.route('/stats/food_events/update/<string:college>', methods=['PATCH'])
+@app.route('/' + os.environ['free'] + '/stats/food_events/update/<string:college>', methods=['PATCH'])
 @csrf.exempt
 def updateFoodEvents(college): 
     stats = Stats()
@@ -232,7 +232,7 @@ def updateFoodEvents(college):
             db.session.add(stat)
     db.session.commit()
 
-@app.route('/marker/<string:college>', methods=["GET"])
+@app.route('/' + os.environ['free'] + '/marker/<string:college>', methods=["GET"])
 @csrf.exempt
 def getCollegeMarkers(college):
     colleges = []
@@ -281,7 +281,7 @@ def deletePastMarkers(markerId):
 
 
 # Returns list of colleges for all colleges provided for a given state
-@app.route('/marker/state', methods=['POST'])
+@app.route('/' + os.environ['free'] + '/marker/state', methods=['POST'])
 @csrf.exempt
 def getMarkersFromState(): 
     input = request.get_json()
@@ -309,7 +309,7 @@ def getMarkersFromState():
                     'additional_info': marker.additional_info})
     return jsonify(data)
 
-@app.route('/stats/state', methods=['POST'])
+@app.route('/' + os.environ['free'] + '/stats/state', methods=['POST'])
 @csrf.exempt
 def getStatsForState():
     stats = Stats.query.all()
@@ -331,7 +331,7 @@ def getStatsForState():
             'college': "state"}
     return jsonify(data)
 
-@app.route('/marker/<string:college>/<string:food>', methods = ['GET'])
+@app.route('/' + os.environ['free'] + '/marker/<string:college>/<string:food>', methods = ['GET'])
 def getMarkersFromFoodAndCollege(college, food):
     markers = Marker.query.filter_by(college=college, food=food).all()
     markerArray = []
@@ -360,7 +360,7 @@ def getMarkersFromFoodAndCollege(college, food):
         return {}
 
 # likes, dislikes, reports, sign ups, here
-@app.route('/marker/button/<string:id>/<string:button>/<string:college>', methods = ['GET'])
+@app.route('/' + os.environ['free'] + '/marker/button/<string:id>/<string:button>/<string:college>', methods = ['GET'])
 def patchMarker(id, button, college):
     All = Stats.query.filter_by(college="all").all()
     PickCollege = Stats.query.filter_by(college="pickCollege").all()
@@ -402,7 +402,7 @@ def patchMarker(id, button, college):
     db.session.commit()
     return jsonify(["success"])
 
-@app.route('/stats/fed_today/reset')
+@app.route('/' + os.environ['free'] + '/stats/fed_today/reset')
 def resetFedToday():
     allStats = Stats.query.filter_by(college="all").all()
     if (allStats[0].fed_today == 0):
@@ -415,7 +415,7 @@ def resetFedToday():
             db.session.add(stat)
     db.session.commit()
 
-@app.route('/marker/title/college/<string:food>/<string:building>/<string:college>')
+@app.route('/' + os.environ['free'] + '/marker/title/college/<string:food>/<string:building>/<string:college>')
 def getMarkerByTitleAndCollege(food, building, college):
     markers = Marker.query.filter_by(food=food, building=building, college=college).all()
     Markers = []
