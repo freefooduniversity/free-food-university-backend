@@ -54,6 +54,7 @@ class Users(db.Model):
     active_marker_id = Column(Integer)
     banned_status = Column(Integer)
     
+
 '''
 class Restaurant(db.Model):
     __tablename__ = 'restaurant'

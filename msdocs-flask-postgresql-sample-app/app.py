@@ -75,14 +75,15 @@ def getAllMarkers():
 def getUSAStats(college):
     stats = Stats.query.all()
     data = {}
+    userCount = len(Users.query.all())
     seenCollege = False
     for stat in stats:
         if (stat.college == college):
             seenCollege = True
             data = {'id': stat.id,
                     'food_events': stat.food_events,
-                    'fed_today': stat.fed_today,
-                    'fed_all_time': stat.fed_all_time,
+                    'fed_today': stat.fed_all_time,
+                    'fed_all_time': userCount,
                     'college': stat.college}
     if not seenCollege:
         stat = Stats()
@@ -95,8 +96,8 @@ def getUSAStats(college):
         db.session.commit()
         data = {'id': stat.id,
                     'food_events': stat.food_events,
-                    'fed_today': stat.fed_today,
-                    'fed_all_time': stat.fed_all_time,
+                    'fed_today': stat.fed_all_time,
+                    'fed_all_time': userCount,
                     'college': stat.college}
     return jsonify(data)
     
@@ -469,7 +470,9 @@ def addUser():
     user.banned_status= 0,
     user.active_marker_id =  0,
 
-    db.session.add(user)
+    checkUser = Users.query.filter_by(email=input['email']).all()
+    if len(checkUser) == 0:
+        db.session.add(user)
     db.session.commit()
 
 @app.route('/' + os.environ['free'] + '/user/banned/<string:email>', methods=['GET'])
@@ -480,6 +483,7 @@ def banUser(email):
         user.banned_status = 1
         db.session.add(user)
     db.session.commit()
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
