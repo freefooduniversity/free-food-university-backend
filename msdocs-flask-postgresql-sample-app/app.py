@@ -32,7 +32,7 @@ migrate = Migrate(app, db)
 
 # Create databases, if databases exists doesn't issue create
 # For schema changes, run "flask db migrate"
-from models import Marker, Stats
+from models import Marker, Stats, Users
 db.create_all()
 db.session.commit()
 
@@ -439,6 +439,47 @@ def getMarkerByTitleAndCollege(food, building, college):
                         'building': marker.building,
                         'additional_info': marker.additional_info})
     return jsonify(Markers)
+
+@app.route('/' + os.environ['free'] + '/user/<string:email>', methods = ['GET'])
+def getUserByEmail(email):
+    users = Users.query.filter_by(email=email).all()
+    userArr = []
+    for user in users:
+        userArr.append({'id': user.id,
+                        'num_ppl_fed': user.num_ppl_fed,
+                        'email': user.email,
+                        'active_marker_id': user.active_marker_id,
+                        'likes': user.likes,
+                        'dislikes': user.dislikes,
+                        'banned_status': user.banned_status})
+    return jsonify(userArr)
+
+
+@app.route('/' + os.environ['free'] + '/user/add', methods=['POST'])
+@csrf.exempt
+def addUser():
+    user = Users()
+    input = request.get_json()
+
+    user.id= randint(1, 9999999),
+    user.email= input['email'],
+    user.num_ppl_fed= 0,
+    user.likes= 0,
+    user.dislikes= 0,
+    user.banned_status= 0,
+    user.active_marker_id =  0,
+
+    db.session.add(user)
+    db.session.commit()
+
+@app.route('/' + os.environ['free'] + '/user/banned/<string:email>', methods=['GET'])
+def banUser(email):
+    users = Users.query.filter_by(email=email).all()
+    for user in users:
+        db.session.delete(user)
+        user.banned_status = 1
+        db.session.add(user)
+    db.session.commit()
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):

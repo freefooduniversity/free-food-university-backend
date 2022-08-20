@@ -1,5 +1,6 @@
 from ctypes.wintypes import FLOAT
 import numbers
+from xmlrpc.client import Boolean
 try:
     from app import db
 except ImportError:
@@ -42,8 +43,18 @@ class Stats(db.Model):
     college = Column(String(50))
     def __str__(self):
         return self.food_events
-        '''
 
+class Users(db.Model):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    email = Column(String(50))
+    num_ppl_fed = Column(Integer)
+    likes = Column(Integer)
+    dislikes = Column(Integer)
+    active_marker_id = Column(Integer)
+    banned_status = Column(Integer)
+    
+'''
 class Restaurant(db.Model):
     __tablename__ = 'restaurant'
     id = Column(Integer, primary_key=True)
