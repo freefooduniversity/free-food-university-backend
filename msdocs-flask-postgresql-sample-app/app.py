@@ -527,6 +527,18 @@ def getMarkerById(id):
 
     return jsonify(colleges)
 
+@app.route('/' + os.environ['free'] + '/user/marker/<string:action>/<string:email>/<string:id>', methods=['GET'])
+def setUserMarkerId(action, email, id):
+    users = Users.query.filter_by(email=email).all()
+    for user in users:
+        db.session.delete(user)
+        if (action == 'set'):
+            user.active_marker_id = id
+        else:
+            user.active_marker_id = 0
+        db.session.add(user)
+    db.session.commit()
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
