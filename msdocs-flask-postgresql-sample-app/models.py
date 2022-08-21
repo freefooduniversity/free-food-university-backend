@@ -54,7 +54,9 @@ class Users(db.Model):
     active_marker_id = Column(Integer)
     banned_status = Column(Integer)
     
-
+class Phrases(db.Model):
+    __tablename__ = 'banned_phrases'
+    phrase = Column(String(50), primary_key = True)
 '''
 class Restaurant(db.Model):
     __tablename__ = 'restaurant'

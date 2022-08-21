@@ -32,7 +32,7 @@ migrate = Migrate(app, db)
 
 # Create databases, if databases exists doesn't issue create
 # For schema changes, run "flask db migrate"
-from models import Marker, Stats, Users
+from models import Marker, Stats, Users, Phrases
 db.create_all()
 db.session.commit()
 
@@ -538,6 +538,22 @@ def setUserMarkerId(action, email, id):
             user.active_marker_id = 0
         db.session.add(user)
     db.session.commit()
+
+
+@app.route('/' + os.environ['free'] + '/banned/phrases', methods=["GET"])
+@csrf.exempt
+def bannedPhrases():
+    PHrases = []
+    phrases = Phrases.query.all()
+    for phrase in phrases:
+            hash = 0
+            for c in phrase.phrase:
+                hash -= ord(c)
+            PHrases.append({
+                'phrase': hash
+            })
+
+    return jsonify(PHrases)
 
 '''
 @app.route('/<int:id>', methods=['GET'])
