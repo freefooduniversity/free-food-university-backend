@@ -484,6 +484,22 @@ def banUser(email):
         db.session.add(user)
     db.session.commit()
 
+# action = 'likes' or 'dislikes'
+@app.route('/' + os.environ['free'] + '/user/<string:action>/increment/<string:email>', methods=['GET'])
+@csrf.exempt
+def incrementProfile(action, email):
+    users = Users().query.filter_by(email=email).all()
+
+    for user in users:
+        db.session.delete(user)
+        if action == 'likes':
+            user.likes += 1
+            user.num_ppl_fed += 1
+        else:
+            user.dislikes += 1
+        db.session.add(user)
+    db.session.commit()
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
