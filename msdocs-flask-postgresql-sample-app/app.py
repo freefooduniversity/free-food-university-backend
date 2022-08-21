@@ -494,9 +494,9 @@ def incrementProfile(action, email):
         db.session.delete(user)
         if action == 'likes':
             user.likes += 1
-            user.num_ppl_fed += 1
         else:
             user.dislikes += 1
+        user.num_ppl_fed += 1
         db.session.add(user)
     db.session.commit()
 
