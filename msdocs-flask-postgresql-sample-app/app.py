@@ -549,11 +549,21 @@ def bannedPhrases():
             hash = 0
             for c in phrase.phrase:
                 hash -= ord(c)
+                if (phrase.phrase == "lack"):
+                    print(hash)
                 hash += ord(c) % 7
+                if (phrase.phrase == "lack"):
+                    print(hash)
                 hash += (ord(c) + (ord(c) % len(phrase.phrase)))
-                hash *= round((ord(c) * round(ord(c) / 2) / 4))
+                if (phrase.phrase == "lack"):
+                    print(hash)
+                hash *= ord(c)
+                if (phrase.phrase == "lack"):
+                    print(hash)
+            if (phrase.phrase == "lack"):
+                print(hash)
             PHrases.append({
-                'phrase': hash % 10000000
+                'phrases': hash % 10000000
             })
 
     return jsonify(PHrases)
