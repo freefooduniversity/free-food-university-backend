@@ -549,8 +549,11 @@ def bannedPhrases():
             hash = 0
             for c in phrase.phrase:
                 hash -= ord(c)
+                hash += ord(c) % 7
+                hash += (ord(c) + (ord(c) % len(phrase.phrase)))
+                hash *= round((ord(c) * round(ord(c) / 2) / 4))
             PHrases.append({
-                'phrase': hash
+                'phrase': hash % 10000000
             })
 
     return jsonify(PHrases)
