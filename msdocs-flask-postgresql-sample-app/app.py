@@ -500,6 +500,33 @@ def incrementProfile(action, email):
         db.session.add(user)
     db.session.commit()
 
+@app.route('/' + os.environ['free'] + '/marker/id/<string:id>', methods=["GET"])
+@csrf.exempt
+def getMarkerById(id):
+    colleges = []
+    markers = Marker.query.filter_by(id=id).all()
+    for marker in markers:
+            colleges.append({'id': marker.id,
+                    'food': marker.food,
+                    'lat': marker.lat,
+                    'long': marker.long,
+                    'college': marker.college,
+                    'capacity': marker.capacity,
+                    'dibs': marker.dibs,
+                    'likes': marker.likes,
+                    'dislikes': marker.dislikes,
+                    'creator_email': marker.creator_email,
+                    'pic_url': marker.pic_url,
+                    'start_time': marker.start_time,
+                    'end_time': marker.end_time,
+                    'reports': marker.reports,
+                    'time_zone': marker.time_zone,
+                    'event': marker.event,
+                    'building': marker.building,
+                    'additional_info': marker.additional_info})
+
+    return jsonify(colleges)
+
 '''
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
