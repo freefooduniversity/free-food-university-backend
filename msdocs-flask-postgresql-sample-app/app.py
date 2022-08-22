@@ -233,6 +233,14 @@ def updateFoodEvents(college):
             db.session.add(stat)
     db.session.commit()
 
+def removeMarkerId(id):
+    users = Users.query.filter_by(active_marker_id=id).all()
+    for user in users:
+        db.session.delete(user)
+        user.active_marker_id = 0
+        db.session.add(user)
+    
+
 @app.route('/' + os.environ['free'] + '/marker/<string:college>', methods=["GET"])
 @csrf.exempt
 def getCollegeMarkers(college):
@@ -244,6 +252,7 @@ def getCollegeMarkers(college):
     for marker in markers:
          if (marker.end_time + marker.time_zone < convertStringToInt(datetime.now().strftime("%H:%M:%S")) or convertStringToInt(datetime.now().strftime("%H:%M:%S")) + 1200 < marker.end_time):
             deletePastMarkers(marker.id)
+            removeMarkerId(marker.id)
          else:
             colleges.append({'id': marker.id,
                     'food': marker.food,
