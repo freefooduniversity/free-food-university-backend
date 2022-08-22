@@ -57,6 +57,10 @@ class Users(db.Model):
 class Phrases(db.Model):
     __tablename__ = 'banned_phrases'
     phrase = Column(String(50), primary_key = True)
+
+class Feedback(db.Model):
+    __tablename__ = 'feedback'
+    feedback = Column(String(1000), primary_key = True)
 '''
 class Restaurant(db.Model):
     __tablename__ = 'restaurant'
